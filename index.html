@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حماية العائلة - تنبيه أمني ومراجعة الروابط</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for modern Arabic typography (Tajawal & Cairo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Tajawal', 'Cairo', 'sans-serif'],
+            display: ['Cairo', 'sans-serif'],
+          },
+          boxShadow: {
+            'phone': '0 25px 60px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+            'phone-light': '0 25px 60px -15px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(226, 232, 240, 0.8)',
+            'glow-red': '0 0 45px rgba(239, 68, 68, 0.55), 0 0 100px rgba(185, 28, 28, 0.25)',
+            'glow-green': '0 0 45px rgba(34, 197, 94, 0.55), 0 0 100px rgba(22, 163, 74, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Tajawal', sans-serif;
+    }
+    .badge-pulse {
+      animation: pulseGlow 2.5s infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.04); opacity: 1; filter: drop-shadow(0 0 25px rgba(239,68,68,0.7)); }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-rose-500 selection:text-white flex flex-col justify-between p-4 sm:p-6 lg:p-10 antialiased overflow-x-hidden">
+
+  <!-- Header Banner / Control Bar -->
+  <header class="max-w-6xl mx-auto w-full mb-8 text-center">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs font-semibold text-rose-400 mb-3 shadow-inner">
+      <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+      نظام حماية كبار السن والعائلة المتقدم
+    </div>
+    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black font-display tracking-tight text-white mb-2">
+      منصة الحماية التفاعلية المتزامنة
+    </h1>
+    <p class="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto">
+      محاكاة حية ثنائية الشاشة: هاتف الوالد المحمي (المستخدم) مقابل لوحة تحكم ولي الأمر (الابن) لاتخاذ القرار الفوري لحماية الأسرة من التصيد والاحتيال الإلكتروني.
+    </p>
+
+    <!-- Quick State Helper indicator -->
+    <div class="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs">
+      <span class="text-slate-400">حالة التزامن:</span>
+      <span id="sync-status" class="bg-rose-950/70 text-rose-300 border border-rose-800/60 px-3 py-1 rounded-md font-medium flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> بانتظار قرار الابن (الرابط محجوب مؤقتاً)
+      </span>
+      <button onclick="resetPrototype()" class="text-slate-400 hover:text-white underline decoration-slate-600 transition-colors ml-2">
+        إعادة تعيين المحاكاة
+      </button>
+    </div>
+  </header>
+
+  <!-- Dual Device Showcase Container -->
+  <main class="max-w-6xl mx-auto w-full flex-1 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-14 pb-8">
+
+    <!-- ============================================== -->
+    <!-- PHONE 1: The User / Elderly Phone (Red Screen) -->
+    <!-- ============================================== -->
+    <div class="flex flex-col items-center w-full max-w-[370px]">
+      <!-- Phone Label -->
+      <div class="flex items-center justify-between w-full px-2 mb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="flex h-2.5 w-2.5 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+          </span>
+          <span class="text-sm font-bold text-slate-200">هاتف الوالد (المستخدم)</span>
+        </div>
+        <span class="text-xs bg-slate-800/80 text-slate-400 px-2.5 py-0.5 rounded-full border border-slate-700">شاشة التحذير الفوري</span>
+      </div>
+
+      <!-- Phone Outer Frame -->
+      <div class="relative w-[360px] h-[720px] bg-slate-900 rounded-[50px] p-3 shadow-phone border-4 border-slate-700/80 transition-all duration-500 hover:border-slate-600">
+        <!-- Physical Speaker / Mic notch indicator -->
+        <div class="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-30 flex items-center justify-end px-3">
+          <div class="w-2.5 h-2.5 rounded-full bg-slate-800 border border-slate-700 mr-1"></div>
+        </div>
+
+        <!-- Screen Content Interior -->
+        <div id="phone1-container" class="relative w-full h-full rounded-[40px] overflow-hidden flex flex-col justify-between transition-colors duration-700 bg-gradient-to-b from-[#6b0808] via-[#480404] to-[#250101] text-white p-6 pt-9 border border-rose-900/30">
+          
+          <!-- Ambient Background Light Effect -->
+          <div id="phone1-ambient-glow" class="absolute -top-24 -left-24 w-72 h-72 bg-red-600/30 blur-[90px] rounded-full pointer-events-none transition-all duration-700"></div>
+          <div class="absolute bottom-0 right-0 w-64 h-64 bg-red-900/20 blur-[80px] rounded-full pointer-events-none"></div>
+
+          <!-- Top Status Bar -->
+          <div class="relative z-10 flex items-center justify-between text-xs text-rose-200/80 font-medium px-1">
+            <span>9:41</span>
+            <div class="flex items-center gap-1.5" dir="ltr">
+              <!-- Network Icon -->
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+              <!-- Wifi Icon -->
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.67 0 7.02 1.41 9.54 3.73l-2.02 2.03C17.65 11.58 14.97 10.5 12 10.5s-5.65 1.08-7.52 2.76L2.46 11.23C4.98 8.91 8.33 7.5 12 7.5z"/></svg>
+              <!-- Battery Icon -->
+              <div class="w-5 h-2.5 border border-rose-200/80 rounded-sm p-0.5 flex items-center">
+                <div class="h-full bg-rose-200/90 rounded-2xs w-4"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Warning Visual & Center Element -->
+          <div class="relative z-10 my-auto flex flex-col items-center text-center">
+            
+            <!-- Dynamic Center Shield Icon Container -->
+            <div id="shield-wrapper" class="relative mb-6">
+              <!-- Animated Ring Glow -->
+              <div id="shield-glow-pulse" class="absolute -inset-4 rounded-full bg-red-600/30 blur-xl badge-pulse"></div>
+              
+              <!-- 3D Style Shield Graphic -->
+              <div id="shield-card" class="relative w-28 h-32 flex items-center justify-center drop-shadow-2xl transition-transform duration-500">
+                <!-- SVG 3D Shield (Red State by default) -->
+                <svg id="svg-shield" viewBox="0 0 100 120" class="w-full h-full drop-shadow-[0_15px_25px_rgba(0,0,0,0.6)]">
+                  <defs>
+                    <linearGradient id="shieldGradRed" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#ff4444" />
+                      <stop offset="45%" stop-color="#dc2626" />
+                      <stop offset="100%" stop-color="#7f1d1d" />
+                    </linearGradient>
+                    <linearGradient id="shieldGradGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#4ade80" />
+                      <stop offset="45%" stop-color="#16a34a" />
+                      <stop offset="100%" stop-color="#14532d" />
+                    </linearGradient>
+                    <linearGradient id="shieldHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4" />
+                      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  
+                  <!-- Shield Base -->
+                  <path id="shield-base-path" d="M50 4 C76 4, 94 18, 94 40 C94 80, 58 106, 50 114 C42 106, 6 80, 6 40 C6 18, 24 4, 50 4 Z" 
+                        fill="url(#shieldGradRed)" stroke="#fca5a5" stroke-width="2.5" stroke-linejoin="round"/>
+                  
+                  <!-- Inner 3D Chamfer Shadow -->
+                  <path d="M50 11 C72 11, 86 22, 86 41 C86 74, 56 97, 50 104 C44 97, 14 74, 14 41 C14 22, 28 11, 50 11 Z" 
+                        fill="none" stroke="url(#shieldHighlight)" stroke-width="2"/>
+                </svg>
+
+                <!-- Center Symbol inside Shield (Cross vs Checkmark) -->
+                <div id="shield-icon-content" class="absolute inset-0 flex items-center justify-center pb-2">
+                  <!-- Red State: Large Crisp Bold 'X' -->
+                  <svg id="icon-cross" class="w-12 h-12 text-white stroke-[3.5] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  
+                  <!-- Green State (Hidden Initially): Large Checkmark -->
+                  <svg id="icon-check" class="hidden w-12 h-12 text-white stroke-[3.5] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main Title: تنبيه أمني -->
+            <div id="phone1-badge" class="inline-block px-3 py-0.5 mb-2 rounded-full bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-bold tracking-wider">
+              نظام الفحص الاستباقي
+            </div>
+            <h2 id="phone1-main-title" class="text-3xl font-black font-display text-white tracking-wide mb-1 drop-shadow-md">
+              تنبيه أمني
+            </h2>
+
+            <!-- Subtitle: تم حظر الرابط -->
+            <h3 id="phone1-subtitle" class="text-xl font-extrabold text-rose-300 mb-3 drop-shadow">
+              تم حظر الرابط
+            </h3>
+
+            <!-- Body Text -->
+            <p id="phone1-body-text" class="text-sm font-medium text-slate-100/90 leading-relaxed max-w-[270px] mb-4">
+              تم اكتشاف رابط احتيالي! تم منع الوصول إلى هذا الموقع لحمايتك.
+            </p>
+
+            <!-- Guardian Review Status Pill -->
+            <div id="phone1-status-pill" class="bg-black/35 backdrop-blur-md border border-white/10 rounded-xl px-4 py-2.5 flex items-center gap-2.5 text-xs text-rose-200">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+              </span>
+              <span>أُرسل إشعار فوري لولي الأمر للمراجعة</span>
+            </div>
+
+          </div>
+
+          <!-- Footer Area -->
+          <div class="relative z-10 pt-3 border-t border-rose-800/40 text-center">
+            <p id="phone1-footer" class="text-[11px] text-rose-300/70 font-mono tracking-tight dir-ltr leading-tight">
+              الرابط: <span class="text-rose-200 underline">malicious-example.com/phish</span>
+              <br>
+              <span class="font-sans text-[11px] text-rose-300/80 font-normal">حماية العائلة: <strong class="text-white">مُفعلة</strong></span>
+            </p>
+            <div class="mt-2 text-[10px] text-rose-400/60 font-medium">
+              لا يتطلب منك أي إجراء • الحماية نشطة
+            </div>
+          </div>
+
+          <!-- Bottom Home Indicator Bar -->
+          <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/30 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- INTERACTIVE SYNC BRIDGE (Desktop visual arrow) -->
+    <!-- ============================================== -->
+    <div class="hidden lg:flex flex-col items-center justify-center gap-2 text-slate-500">
+      <div class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 shadow-lg">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+        </svg>
+      </div>
+      <span class="text-[11px] font-semibold tracking-wider uppercase text-slate-400">تزامن فوري</span>
+      <span class="text-[10px] text-slate-500 max-w-[90px] text-center">انقر حظر أو سماح لاختبار الاستجابة</span>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- PHONE 2: The Guardian / Son Phone (White Screen)-->
+    <!-- ============================================== -->
+    <div class="flex flex-col items-center w-full max-w-[370px]">
+      <!-- Phone Label -->
+      <div class="flex items-center justify-between w-full px-2 mb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="flex h-2.5 w-2.5 relative">
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
+          </span>
+          <span class="text-sm font-bold text-slate-200">هاتف الابن (ولي الأمر)</span>
+        </div>
+        <span class="text-xs bg-slate-800/80 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-900/40">شاشة القرار والموافقة</span>
+      </div>
+
+      <!-- Phone Outer Frame -->
+      <div class="relative w-[360px] h-[720px] bg-slate-900 rounded-[50px] p-3 shadow-phone border-4 border-slate-700/80 transition-all duration-500 hover:border-slate-600">
+        <!-- Physical Speaker / Mic notch indicator -->
+        <div class="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-30 flex items-center justify-end px-3">
+          <div class="w-2.5 h-2.5 rounded-full bg-slate-800 border border-slate-700 mr-1"></div>
+        </div>
+
+        <!-- Screen Content Interior (Clean White Background) -->
+        <div class="relative w-full h-full rounded-[40px] overflow-hidden flex flex-col justify-between bg-white text-slate-800 shadow-phone-light">
+          
+          <!-- Top Status Bar (Dark icons on white) -->
+          <div class="pt-3 px-6 flex items-center justify-between text-xs text-slate-800 font-semibold z-20">
+            <span>9:41</span>
+            <div class="flex items-center gap-1.5" dir="ltr">
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.67 0 7.02 1.41 9.54 3.73l-2.02 2.03C17.65 11.58 14.97 10.5 12 10.5s-5.65 1.08-7.52 2.76L2.46 11.23C4.98 8.91 8.33 7.5 12 7.5z"/></svg>
+              <div class="w-5 h-2.5 border border-slate-800 rounded-sm p-0.5 flex items-center">
+                <div class="h-full bg-slate-800 rounded-2xs w-4"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Header / Navigation Bar -->
+          <div class="px-5 py-3 border-b border-slate-100 flex items-center justify-between bg-white">
+            <button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-700 hover:bg-slate-100 transition-colors" title="رجوع">
+              <!-- Back arrow icon '>' for RTL (points right in RTL flow) -->
+              <svg class="w-5 h-5 text-slate-700 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            <h3 class="text-base font-bold text-slate-900 font-display">
+              حماية العائلة: الوالد
+            </h3>
+            <div class="w-8 h-8 flex items-center justify-center text-slate-400">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Main Scrollable / Viewable Body Content -->
+          <div class="p-6 flex-1 flex flex-col justify-between overflow-y-auto">
+            
+            <div class="flex flex-col items-center">
+              <!-- Profile Section: Circular user avatar -->
+              <div class="relative mb-3 mt-1">
+                <div class="w-20 h-20 rounded-full p-1 bg-gradient-to-tr from-rose-500 to-amber-500 shadow-md">
+                  <div class="w-full h-full rounded-full bg-slate-100 border-2 border-white overflow-hidden flex items-center justify-center">
+                    <!-- Stylized Senior / Father Avatar SVG -->
+                    <svg viewBox="0 0 100 100" class="w-full h-full bg-slate-200">
+                      <rect width="100" height="100" fill="#e2e8f0"/>
+                      <circle cx="50" cy="40" r="20" fill="#cbd5e1"/>
+                      <path d="M50 36 C42 36 34 39 34 46 C34 50 38 52 42 54 C46 56 54 56 58 54 C62 52 66 50 66 46 C66 39 58 36 50 36 Z" fill="#94a3b8"/>
+                      <circle cx="50" cy="40" r="14" fill="#fed7aa"/>
+                      <!-- White Hair / Mustache representing elder -->
+                      <path d="M36 38 C36 28 64 28 64 38 C64 32 36 32 36 38 Z" fill="#ffffff"/>
+                      <path d="M42 45 C45 48 50 48 50 48 C50 48 55 48 58 45 C60 48 56 51 50 51 C44 51 40 48 42 45 Z" fill="#ffffff"/>
+                      <path d="M22 84 C22 66 34 60 50 60 C66 60 78 66 78 84 Z" fill="#475569"/>
+                    </svg>
+                  </div>
+                </div>
+                <!-- Active protection badge -->
+                <span class="absolute bottom-0 right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center shadow-sm" title="متصل ومحمي">
+                  <svg class="w-3 h-3 text-white stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </span>
+              </div>
+
+              <!-- Elder Name -->
+              <span class="text-lg font-extrabold text-slate-900 font-display">الوالد</span>
+              <span class="text-xs text-slate-500 font-medium mb-4">جهاز: Samsung Galaxy S23 (مُقترن)</span>
+
+              <!-- Request Info Section -->
+              <div class="w-full text-right bg-slate-50 border border-slate-200/80 rounded-2xl p-4 mb-4">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <div class="w-2 h-2 rounded-full bg-rose-500"></div>
+                  <h4 class="text-sm font-extrabold text-slate-900">
+                    طلب مراجعة من: الوالد
+                  </h4>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  حاول الوالد فتح رابط قد يكون ضاراً أثناء تصفح تطبيق المراسلة.
+                </p>
+              </div>
+
+              <!-- URL Box -->
+              <div class="w-full bg-slate-100 rounded-2xl p-4 border border-slate-200 text-right shadow-sm mb-4">
+                <div class="text-[11px] font-semibold text-slate-500 mb-1">الرابط المطلوب فتحه:</div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-200 font-mono text-xs text-slate-800 break-all text-left dir-ltr flex items-center justify-between gap-2 shadow-inner">
+                  <span class="truncate select-all text-rose-700 font-medium">malicious-example.com/phish</span>
+                  <span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded border border-rose-200 font-sans font-bold flex-shrink-0">خبيث</span>
+                </div>
+                <!-- Warning categorization in red -->
+                <div class="mt-2 text-xs font-bold text-rose-600 flex items-center gap-1.5 justify-start">
+                  <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                  <span>(التصنيف: تصيد احتيالي)</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">
+                  تحذير: هذا الموقع ينتحل صفحة مصرفية لسرقة بيانات الدخول.
+                </p>
+              </div>
+
+              <!-- Interactive Decision Notice (updates when clicked) -->
+              <div id="guardian-feedback" class="w-full text-center text-xs py-2 px-3 rounded-lg hidden transition-all duration-300"></div>
+
+            </div>
+
+            <!-- Two Action Buttons side-by-side at the bottom -->
+            <div class="w-full pt-2">
+              <div class="text-[11px] text-slate-400 font-medium text-center mb-2">اختر الإجراء المناسب لهاتف الوالد:</div>
+              <div class="grid grid-cols-2 gap-3">
+                
+                <!-- Green Button: "سماح" (Allow) -->
+                <button id="btn-allow" onclick="handleGuardianDecision('allow')" 
+                        class="group relative flex flex-col items-center justify-center p-3.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-2xl font-bold shadow-md shadow-emerald-600/30 transition-all duration-200">
+                  <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
+                    <!-- White Checkmark Icon -->
+                    <svg class="w-6 h-6 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                  </div>
+                  <span class="text-sm font-black font-display tracking-wide">سماح</span>
+                  <span class="text-[10px] text-emerald-100 font-normal">تجاوز الحظر بحذر</span>
+                </button>
+
+                <!-- Solid Red Button: "حظر" (Block) -->
+                <button id="btn-block" onclick="handleGuardianDecision('block')" 
+                        class="group relative flex flex-col items-center justify-center p-3.5 bg-red-600 hover:bg-red-700 active:scale-95 text-white rounded-2xl font-bold shadow-md shadow-red-600/30 transition-all duration-200">
+                  <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
+                    <!-- White 'X' Icon -->
+                    <svg class="w-6 h-6 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                  <span class="text-sm font-black font-display tracking-wide">حظر</span>
+                  <span class="text-[10px] text-rose-100 font-normal">تأكيد حجب الرابط</span>
+                </button>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Home Indicator Bar (Dark for white phone) -->
+          <div class="pb-2 flex justify-center">
+            <div class="w-32 h-1 bg-slate-300 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Interactive JavaScript for Live Prototype Sync -->
+  <script>
+    let currentDecision = null;
+
+    function handleGuardianDecision(action) {
+      currentDecision = action;
+      
+      const phone1Container = document.getElementById('phone1-container');
+      const ambientGlow = document.getElementById('phone1-ambient-glow');
+      const shieldGlowPulse = document.getElementById('shield-glow-pulse');
+      const shieldBasePath = document.getElementById('shield-base-path');
+      const iconCross = document.getElementById('icon-cross');
+      const iconCheck = document.getElementById('icon-check');
+      const phone1Badge = document.getElementById('phone1-badge');
+      const mainTitle = document.getElementById('phone1-main-title');
+      const subtitle = document.getElementById('phone1-subtitle');
+      const bodyText = document.getElementById('phone1-body-text');
+      const statusPill = document.getElementById('phone1-status-pill');
+      const footer = document.getElementById('phone1-footer');
+      const syncStatus = document.getElementById('sync-status');
+      const guardianFeedback = document.getElementById('guardian-feedback');
+      const btnBlock = document.getElementById('btn-block');
+      const btnAllow = document.getElementById('btn-allow');
+
+      if (action === 'block') {
+        // As requested:
+        // "When the user clicks the Red "حظر" button on Phone 2, change Phone 1's text to show a success message 
+        // "تم تأكيد الحظر بنجاح" with a green shield icon."
+
+        // Update Phone 1 Container & Ambient
+        phone1Container.className = "relative w-full h-full rounded-[40px] overflow-hidden flex flex-col justify-between transition-colors duration-700 bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#01140e] text-white p-6 pt-9 border border-emerald-900/40";
+        ambientGlow.className = "absolute -top-24 -left-24 w-72 h-72 bg-emerald-500/30 blur-[90px] rounded-full pointer-events-none transition-all duration-700";
+        shieldGlowPulse.className = "absolute -inset-4 rounded-full bg-emerald-500/30 blur-xl badge-pulse";
+
+        // Change Shield to Green
+        shieldBasePath.setAttribute('fill', 'url(#shieldGradGreen)');
+        shieldBasePath.setAttribute('stroke', '#86efac');
+        iconCross.classList.add('hidden');
+        iconCheck.classList.remove('hidden');
+
+        // Update Phone 1 Texts
+        phone1Badge.className = "inline-block px-3 py-0.5 mb-2 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold tracking-wider";
+        phone1Badge.innerText = "اكتمل إجراء الحماية";
+
+        mainTitle.innerText = "تم تأكيد الحظر بنجاح";
+        mainTitle.className = "text-2xl sm:text-3xl font-black font-display text-white tracking-wide mb-1 drop-shadow-md text-emerald-100";
+
+        subtitle.innerText = "تمت حماية جهازك بواسطة الابن";
+        subtitle.className = "text-lg font-bold text-emerald-300 mb-3 drop-shadow";
+
+        bodyText.innerText = "قام ولي الأمر بتأكيد حظر هذا الموقع ومنعه نهائياً للحفاظ على خصوصيتك وأمان حساباتك.";
+
+        statusPill.className = "bg-emerald-950/70 border border-emerald-500/30 rounded-xl px-4 py-2.5 flex items-center gap-2 text-xs text-emerald-200";
+        statusPill.innerHTML = `
+          <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <span class="font-bold">أنت بأمان تام الآن</span>
+        `;
+
+        footer.innerHTML = `
+          الرابط: <span class="text-slate-300 line-through">malicious-example.com/phish</span> (محظور دائمًا)
+          <br>
+          <span class="font-sans text-[11px] text-emerald-300 font-semibold">حماية العائلة: مُفعلة بنجاح ✓</span>
+        `;
+
+        // Update Guardian Phone Feedback
+        guardianFeedback.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'border-emerald-200');
+        guardianFeedback.classList.add('bg-red-50', 'text-red-700', 'border', 'border-red-200');
+        guardianFeedback.innerHTML = `<strong>تم الحظر:</strong> تلقى هاتف الوالد التحديث وأصبح بأمان.`;
+
+        // Update Global Sync Indicator
+        syncStatus.className = "bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 px-3 py-1 rounded-md font-medium flex items-center gap-1.5";
+        syncStatus.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> تم تنفيذ الحظر بنجاح على كلا الجهازين`;
+
+        // Visual feedback on buttons
+        btnBlock.classList.add('ring-4', 'ring-red-400/50');
+        btnAllow.classList.remove('ring-4', 'ring-emerald-400/50');
+
+      } else if (action === 'allow') {
+        // Temporary allow state for demo versatility
+        phone1Container.className = "relative w-full h-full rounded-[40px] overflow-hidden flex flex-col justify-between transition-colors duration-700 bg-gradient-to-b from-[#78350f] via-[#451a03] to-[#1c0b02] text-white p-6 pt-9 border border-amber-900/40";
+        ambientGlow.className = "absolute -top-24 -left-24 w-72 h-72 bg-amber-500/30 blur-[90px] rounded-full pointer-events-none transition-all duration-700";
+        shieldGlowPulse.className = "absolute -inset-4 rounded-full bg-amber-500/30 blur-xl badge-pulse";
+
+        shieldBasePath.setAttribute('fill', '#d97706');
+        shieldBasePath.setAttribute('stroke', '#fcd34d');
+        iconCross.classList.remove('hidden');
+        iconCheck.classList.add('hidden');
+
+        phone1Badge.className = "inline-block px-3 py-0.5 mb-2 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-bold tracking-wider";
+        phone1Badge.innerText = "سماح استثنائي";
+
+        mainTitle.innerText = "تم منح الإذن";
+        mainTitle.className = "text-2xl sm:text-3xl font-black font-display text-white tracking-wide mb-1 drop-shadow-md text-amber-100";
+
+        subtitle.innerText = "تجاوز التحذير بواسطة الابن";
+        subtitle.className = "text-lg font-bold text-amber-300 mb-3 drop-shadow";
+
+        bodyText.innerText = "وافق الابن على فتح الرابط. يرجى توخي أقصى درجات الحذر وعدم إدخال أي كلمات سر.";
+
+        guardianFeedback.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'border-red-200');
+        guardianFeedback.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
+        guardianFeedback.innerHTML = `<strong>تم السماح:</strong> تم فتح الرابط استثنائياً لهاتف الوالد.`;
+
+        syncStatus.className = "bg-amber-950/80 text-amber-300 border border-amber-700/60 px-3 py-1 rounded-md font-medium flex items-center gap-1.5";
+        syncStatus.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> تم منح استثناء مؤقت من قبل ولي الأمر`;
+
+        btnAllow.classList.add('ring-4', 'ring-emerald-400/50');
+        btnBlock.classList.remove('ring-4', 'ring-red-400/50');
+      }
+    }
+
+    function resetPrototype() {
+      // Revert back to original Red blocked screen on phone 1
+      const phone1Container = document.getElementById('phone1-container');
+      const ambientGlow = document.getElementById('phone1-ambient-glow');
+      const shieldGlowPulse = document.getElementById('shield-glow-pulse');
+      const shieldBasePath = document.getElementById('shield-base-path');
+      const iconCross = document.getElementById('icon-cross');
+      const iconCheck = document.getElementById('icon-check');
+      const phone1Badge = document.getElementById('phone1-badge');
+      const mainTitle = document.getElementById('phone1-main-title');
+      const subtitle = document.getElementById('phone1-subtitle');
+      const bodyText = document.getElementById('phone1-body-text');
+      const statusPill = document.getElementById('phone1-status-pill');
+      const footer = document.getElementById('phone1-footer');
+      const syncStatus = document.getElementById('sync-status');
+      const guardianFeedback = document.getElementById('guardian-feedback');
+      const btnBlock = document.getElementById('btn-block');
+      const btnAllow = document.getElementById('btn-allow');
+
+      phone1Container.className = "relative w-full h-full rounded-[40px] overflow-hidden flex flex-col justify-between transition-colors duration-700 bg-gradient-to-b from-[#6b0808] via-[#480404] to-[#250101] text-white p-6 pt-9 border border-rose-900/30";
+      ambientGlow.className = "absolute -top-24 -left-24 w-72 h-72 bg-red-600/30 blur-[90px] rounded-full pointer-events-none transition-all duration-700";
+      shieldGlowPulse.className = "absolute -inset-4 rounded-full bg-red-600/30 blur-xl badge-pulse";
+
+      shieldBasePath.setAttribute('fill', 'url(#shieldGradRed)');
+      shieldBasePath.setAttribute('stroke', '#fca5a5');
+      iconCross.classList.remove('hidden');
+      iconCheck.classList.add('hidden');
+
+      phone1Badge.className = "inline-block px-3 py-0.5 mb-2 rounded-full bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-bold tracking-wider";
+      phone1Badge.innerText = "نظام الفحص الاستباقي";
+
+      mainTitle.innerText = "تنبيه أمني";
+      mainTitle.className = "text-3xl font-black font-display text-white tracking-wide mb-1 drop-shadow-md";
+
+      subtitle.innerText = "تم حظر الرابط";
+      subtitle.className = "text-xl font-extrabold text-rose-300 mb-3 drop-shadow";
+
+      bodyText.innerText = "تم اكتشاف رابط احتيالي! تم منع الوصول إلى هذا الموقع لحمايتك.";
+
+      statusPill.className = "bg-black/35 backdrop-blur-md border border-white/10 rounded-xl px-4 py-2.5 flex items-center gap-2.5 text-xs text-rose-200";
+      statusPill.innerHTML = `
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+        </span>
+        <span>أُرسل إشعار فوري لولي الأمر للمراجعة</span>
+      `;
+
+      footer.innerHTML = `
+        الرابط: <span class="text-rose-200 underline">malicious-example.com/phish</span>
+        <br>
+        <span class="font-sans text-[11px] text-rose-300/80 font-normal">حماية العائلة: <strong class="text-white">مُفعلة</strong></span>
+      `;
+
+      guardianFeedback.classList.add('hidden');
+      syncStatus.className = "bg-rose-950/70 text-rose-300 border border-rose-800/60 px-3 py-1 rounded-md font-medium flex items-center gap-1.5";
+      syncStatus.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> بانتظار قرار الابن (الرابط محجوب مؤقتاً)`;
+
+      btnBlock.classList.remove('ring-4', 'ring-red-400/50');
+      btnAllow.classList.remove('ring-4', 'ring-emerald-400/50');
+    }
+  </script>
+
+  <!-- Technical Spec & Info Footer -->
+  <footer class="max-w-4xl mx-auto w-full text-center text-xs text-slate-500 border-t border-slate-900 pt-5">
+    <div class="flex flex-wrap items-center justify-center gap-4 text-slate-400">
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> اتجاه النص: من اليمين إلى اليسار (RTL)</span>
+      <span>•</span>
+      <span>خطوط التايبوجرافي: Cairo & Tajawal</span>
+      <span>•</span>
+      <span>تصميم تفاعلي ثنائي الأجهزة</span>
+    </div>
+  </footer>
+
+</body>
+</html>
